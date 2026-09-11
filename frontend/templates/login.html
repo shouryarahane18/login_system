@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+
+<body>
+
+    <h1>Login</h1>
+
+    <form id="loginForm">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+        >
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <p id="message"></p>
+
+    <a href="/">
+        <button type="button">Back to Home</button>
+    </a>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+
+</body>
+
+</html>

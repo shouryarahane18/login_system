@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+
+    <h1>Dashboard</h1>
+
+    <p id="message">Loading...</p>
+
+    <p id="userId"></p>
+
+    <button id="logoutButton">
+        Logout
+    </button>
+
+    <br><br>
+
+    <a href="/">
+        <button type="button">
+            Back to Home
+        </button>
+    </a>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+</body>
+</html>
