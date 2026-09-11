@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
 import os
+
 from dotenv import load_dotenv
 
 from flask_jwt_extended import (
@@ -14,13 +15,12 @@ from flask_jwt_extended import (
 )
 
 
-app = Flask(
-    __name__,
-    template_folder="../frontend/templates",
-    static_folder="../frontend/static"
-)
+# -------------------------
+# LOAD ENVIRONMENT VARIABLES
+# -------------------------
 
 load_dotenv()
+
 
 # -------------------------
 # CHECK ENVIRONMENT VARIABLES
@@ -45,8 +45,22 @@ if not jwt_secret_key:
     )
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
+# -------------------------
+# FLASK APP
+# -------------------------
 
+app = Flask(
+    __name__,
+    template_folder="../frontend/templates",
+    static_folder="../frontend/static"
+)
+
+
+# -------------------------
+# DATABASE CONFIGURATION
+# -------------------------
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -55,11 +69,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # JWT CONFIGURATION
 # -------------------------
 
-app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+app.config["JWT_SECRET_KEY"] = jwt_secret_key
 
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(
+    minutes=1
+)
 
-app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(
+    days=7
+)
 
 
 jwt = JWTManager(app)
@@ -156,6 +174,7 @@ def login():
 
     data = request.get_json()
 
+
     if not data:
 
         return jsonify({
@@ -197,14 +216,10 @@ def login():
         }), 401
 
 
-    # Create access token
-
     access_token = create_access_token(
         identity=str(user.id)
     )
 
-
-    # Create refresh token
 
     refresh_token = create_refresh_token(
         identity=str(user.id)
@@ -212,9 +227,13 @@ def login():
 
 
     return jsonify({
+
         "message": "Login successful!",
+
         "access_token": access_token,
+
         "refresh_token": refresh_token
+
     }), 200
 
 
@@ -231,6 +250,7 @@ def register():
 
 
     data = request.get_json()
+
 
     if not data:
 
@@ -316,8 +336,11 @@ def dashboard():
 
 
     return jsonify({
+
         "message": "Welcome to your dashboard!",
+
         "user_id": user_id
+
     }), 200
 
 
@@ -338,7 +361,9 @@ def refresh():
 
 
     return jsonify({
+
         "access_token": new_access_token
+
     }), 200
 
 
@@ -350,6 +375,10 @@ with app.app_context():
 
     db.create_all()
 
+
+# -------------------------
+# RUN APPLICATION
+# -------------------------
 
 if __name__ == "__main__":
 
