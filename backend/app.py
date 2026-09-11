@@ -22,6 +22,28 @@ app = Flask(
 
 load_dotenv()
 
+# -------------------------
+# CHECK ENVIRONMENT VARIABLES
+# -------------------------
+
+database_url = os.getenv("DATABASE_URL")
+
+jwt_secret_key = os.getenv("JWT_SECRET_KEY")
+
+
+if not database_url:
+
+    raise RuntimeError(
+        "DATABASE_URL is not set."
+    )
+
+
+if not jwt_secret_key:
+
+    raise RuntimeError(
+        "JWT_SECRET_KEY is not set."
+    )
+
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
 
@@ -34,6 +56,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # -------------------------
 
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
 
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
